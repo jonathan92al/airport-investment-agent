@@ -1,0 +1,43 @@
+{
+  "method": "p10 scores 0, p90 scores 100, across reference airports",
+  "reference_airports": 140,
+  "n_per_metric": {
+    "dep_delay15_rate": 140,
+    "avg_taxi_out_min": 140,
+    "cancel_rate": 140,
+    "deps_per_runway_day": 140,
+    "nas_delay_min_per_arrival": 140,
+    "load_factor": 140,
+    "passenger_growth_yoy": 140
+  },
+  "anchors": {
+    "dep_delay15_rate": [
+      0.16368867492404054,
+      0.25559272066744393
+    ],
+    "avg_taxi_out_min": [
+      13.713695803101965,
+      20.79038189751902
+    ],
+    "cancel_rate": [
+      0.0073495118936606485,
+      0.030415591867786904
+    ],
+    "deps_per_runway_day": [
+      6.827397260273973,
+      108.70246575342473
+    ],
+    "nas_delay_min_per_arrival": [
+      1.3987184656276304,
+      4.076829537942272
+    ],
+    "load_factor": [
+      0.7351236214417959,
+      0.8252403842415026
+    ],
+    "passenger_growth_yoy": [
+      -0.039816197709278876,
+      0.07441245094811977
+    ]
+  }
+}
