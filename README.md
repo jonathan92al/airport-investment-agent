@@ -1,4 +1,6 @@
-# Airport Investment Intelligence Agent
+# airport-investment-agent
+
+Airport Investment Intelligence Agent: a chat agent that ranks and compares US airports for modernization investment.
 
 A chat agent that helps analysts find US airports where modernisation is likely to pay off. It answers
 questions about expansion candidates, congestion, long-haul share and unmet demand using public BTS data

@@ -1,4 +1,4 @@
-# Airport Investment Intelligence Agent: Design
+# airport-investment-agent: Design
 
 ## Goal
 Help analysts find US airports where modernisation is likely to pay off because flight and passenger
