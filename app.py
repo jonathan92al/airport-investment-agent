@@ -14,7 +14,32 @@ EXAMPLES = [
     "What is the unmet flight demand in SFO airport and why?",
 ]
 
-st.set_page_config(page_title="Airport Investment Agent", page_icon="✈️", layout="wide")
+st.set_page_config(page_title="Airport Investment Agent", page_icon=":material/flight:", layout="wide")
+
+
+
+st.markdown("""
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root { --accent: #2563eb; --card-border: rgba(100,116,139,.28); }
+@media (prefers-color-scheme: dark) { :root { --accent: #60a5fa; --card-border: rgba(148,163,184,.25); } }
+.block-container { max-width: 1100px; padding-top: 2.5rem; }
+.app-title { display: flex; align-items: center; gap: .75rem; margin: 0 0 1.25rem; text-align: left; }
+.app-title i { color: var(--accent); font-size: 1.6rem; transform: rotate(-20deg); }
+.app-title h1 { margin: 0; padding: 0; font-size: 2rem; font-weight: 700; letter-spacing: -.02em; }
+.app-title span { font-size: .9rem; opacity: .65; margin-left: .25rem; }
+[data-testid="stSidebar"] i.fa-plane { color: var(--accent); margin-right: .5rem; }
+[data-testid="stMarkdownContainer"], [data-testid="stMetric"], [data-testid="stCaptionContainer"],
+[data-testid="stSidebar"] button, [data-testid="stSidebar"] p { text-align: left !important; }
+[data-testid="stSidebar"] button { justify-content: flex-start; }
+[data-testid="stSidebar"] button p { text-align: left; }
+[data-testid="stMetric"] { align-items: flex-start; }
+[data-testid="stMetricValue"] { font-weight: 700; }
+[data-testid="stVerticalBlockBorderWrapper"] { border-color: var(--card-border); }
+[data-testid="stChatMessage"] { background: transparent; border: 1px solid var(--card-border);
+  border-radius: .75rem; padding: 1rem 1.1rem; }
+</style>
+""", unsafe_allow_html=True)
 
 
 @st.cache_resource
@@ -155,8 +180,8 @@ def _render(msg: dict):
 agent = _agent()
 
 with st.sidebar:
-    st.header("Airport Investment Agent")
-    st.caption(f"Model: `{_llm().model}` (local)")
+    st.markdown('<h3 style="text-align:left"><i class="fa-solid fa-plane"></i>Airport Agent</h3>', unsafe_allow_html=True)
+    st.caption(f"Model: `{_llm().model}`")
     st.markdown("**Try:**")
     for ex in EXAMPLES:
         if st.button(ex, width="stretch"):
@@ -168,7 +193,7 @@ with st.sidebar:
     st.caption("Numbers come from public BTS data and deterministic scoring code. The LLM only interprets "
                "your question and explains the results. Scores are 0-100 relative to US peers.")
 
-st.title("✈️ Airport Investment Agent")
+st.markdown('<div class="app-title"><i class="fa-solid fa-plane"></i><h1>Airport Investment Agent</h1></div>', unsafe_allow_html=True)
 for m in st.session_state.messages:
     _render(m)
 
@@ -178,7 +203,7 @@ if question:
     st.session_state.messages.append(user)
     _render(user)
     with st.chat_message("assistant"):
-        with st.spinner("Fetching data and thinking (a local model can take a minute)…"):
+        with st.spinner("Thinking…"):
             try:
                 reply = agent.ask(question)
                 msg = {"role": "assistant", "text": reply.text, "plan": reply.plan, "result": reply.result,
