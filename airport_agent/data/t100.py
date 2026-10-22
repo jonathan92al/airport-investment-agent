@@ -20,8 +20,10 @@ def monthly(iata: str, since_year: int = 2015) -> pd.DataFrame:
     """Monthly rows for one airport, sorted by date. Cached on disk for a week."""
     iata = iata.upper()
     path = config.CACHE_DIR / "t100" / f"{iata}.parquet"
-    if path.exists() and time.time() - path.stat().st_mtime < _TTL_SECONDS:
+    if path.exists() and (config.SNAPSHOT or time.time() - path.stat().st_mtime < _TTL_SECONDS):
         return pd.read_parquet(path)
+    if config.SNAPSHOT:  # airport not in the snapshot (no scheduled service / not fetched when it was built)
+        return pd.DataFrame()
 
     params = {
         "$select": "reporting_month," + ",".join(_NUM_COLS),

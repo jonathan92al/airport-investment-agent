@@ -10,6 +10,8 @@ from .. import config, http
 def _csv(name: str) -> pd.DataFrame:
     path = config.CACHE_DIR / "ourairports" / name
     if not path.exists():
+        if config.SNAPSHOT:
+            raise FileNotFoundError(f"{path} is missing from the data snapshot")
         http.download(config.OURAIRPORTS_BASE + name, path)
     return pd.read_csv(path, low_memory=False)
 

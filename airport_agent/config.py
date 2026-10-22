@@ -1,8 +1,13 @@
 """Central settings. Anything that changes a result lives here so it can be shown to the user."""
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CACHE_DIR = ROOT / ".cache"
+
+# DATA_MODE=snapshot reads the committed ./data folder and never touches the network (used for hosting).
+# The default ("live") downloads from BTS / OurAirports into ./.cache and refreshes it.
+SNAPSHOT = os.getenv("DATA_MODE", "live").lower() == "snapshot"
+CACHE_DIR = ROOT / ("data" if SNAPSHOT else ".cache")
 
 # Distance band edges (statute miles) used when aggregating on-time data. A "long-haul"
 # threshold must be one of these edges, because only band counts are cached.

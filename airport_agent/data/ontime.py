@@ -78,6 +78,8 @@ def load_month(year: int, month: int) -> pd.DataFrame:
     path = _month_cache(year, month)
     if path.exists():
         return pd.read_parquet(path)
+    if config.SNAPSHOT:
+        raise FileNotFoundError(f"{path} is missing from the data snapshot")
 
     zip_path = config.CACHE_DIR / "ontime" / "raw" / f"{year}_{month}.zip"
     http.download(config.ONTIME_ZIP_URL.format(year=year, month=month), zip_path)
@@ -93,6 +95,9 @@ def load_month(year: int, month: int) -> pd.DataFrame:
 
 
 def available_months() -> list[tuple[int, int]]:
+    if config.SNAPSHOT:
+        files = (config.CACHE_DIR / "ontime").glob("agg_*.parquet")
+        return sorted((int(f.stem.split("_")[1]), int(f.stem.split("_")[2])) for f in files)
     html = http.get(config.ONTIME_INDEX_URL).text
     found = re.findall(r"On_Time_Reporting_Carrier_On_Time_Performance_1987_present_(\d{4})_(\d{1,2})\.zip", html)
     return sorted({(int(y), int(m)) for y, m in found})
