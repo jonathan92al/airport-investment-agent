@@ -28,7 +28,7 @@ class FakeLLM:
         self.router_prompts.append(messages[-1]["content"])
         return self.plans.pop(0)
 
-    def narrate(self, messages, max_tokens=350):
+    def narrate(self, messages, max_tokens=1200):
         self.narrator_prompts.append(messages[-1]["content"])
         return self.drafts.pop(0) if self.drafts else "BOS scores 64.7."
 
@@ -69,6 +69,12 @@ def test_invented_number_is_rejected_and_facts_shown_instead(fake_executor):
     assert not reply.grounded and 18.5 in reply.unsupported
     assert "64.7" in reply.text and "-0.024" not in reply.text
     assert "Domestic flights only." in reply.text  # caveats still appended
+
+
+def test_empty_or_truncated_draft_falls_back_to_facts(fake_executor):
+    llm = FakeLLM([Plan(intent="airport_profile", airports=["BOS"])], drafts=[""])
+    reply = core.Agent(llm).ask("Tell me about BOS")
+    assert not reply.grounded and "64.7" in reply.text
 
 
 def test_clarification_skips_narrator_and_keeps_previous_context(fake_executor):

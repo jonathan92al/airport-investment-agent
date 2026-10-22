@@ -60,7 +60,7 @@ def resolve(query: str) -> pd.DataFrame:
     Callers must handle more than one match (e.g. "Washington", "New York") rather than guess.
     Fallback matching is on whole words, so "LA" cannot match "Atlanta".
     """
-    q = query.strip().lower()
+    q = re.sub(r"\s+(international\s+)?(airport|airfield)$", "", query.strip().lower())
     df = load()
     exact_code = df[df["iata"].str.lower() == q]
     if len(exact_code):

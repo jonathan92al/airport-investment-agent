@@ -72,7 +72,7 @@ class Agent:
         draft = self.llm.narrate([{"role": "system", "content": prompts.NARRATOR_SYSTEM},
                                   {"role": "user", "content": f"Question: {question}\n\nFACTS:\n{facts}"}])
         bad = guard.unsupported_numbers(draft, result["facts"] + [question])
-        if bad:
+        if bad or not draft:
             return Reply(compose("Here are the computed facts:\n" + facts, result), plan, result,
                          grounded=False, unsupported=bad)
         return Reply(compose(draft, result), plan, result)

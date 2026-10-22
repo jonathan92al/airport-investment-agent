@@ -22,3 +22,7 @@ def test_codes_cities_and_names():
 def test_unknown_and_short_garbage_match_nothing():
     assert codes("Narnia") == set()
     assert codes("zz") == set()
+
+
+def test_trailing_airport_word_is_ignored():
+    assert list(airports.resolve("Santa Ana airport")["iata"]) == list(airports.resolve("Santa Ana")["iata"]) == ["SNA"]

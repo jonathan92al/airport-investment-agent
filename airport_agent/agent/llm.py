@@ -22,7 +22,7 @@ class LLM:
         self.model = model or os.getenv("LLM_MODEL", DEFAULT_MODEL)
         self.client = OpenAI(base_url=base_url or os.getenv("LLM_BASE_URL", DEFAULT_BASE_URL),
                              api_key=api_key or os.getenv("LLM_API_KEY", "ollama"),
-                             timeout=600, max_retries=1)
+                             timeout=600, max_retries=4)
 
     def plan(self, messages: list[dict]) -> Plan:
         """Structured routing call. Retries once, telling the model what was wrong."""
@@ -39,7 +39,11 @@ class LLM:
                 error = str(e)[:300]
         raise ValueError(f"Router produced no valid plan: {error}")
 
-    def narrate(self, messages: list[dict], max_tokens: int = 350) -> str:
+    def narrate(self, messages: list[dict], max_tokens: int = 1200) -> str:
+        """Returns "" if the draft was cut off or empty (reasoning models spend part of the budget thinking)."""
         resp = self.client.chat.completions.create(model=self.model, messages=messages, temperature=0.1,
                                                    max_tokens=max_tokens)
-        return resp.choices[0].message.content.strip()
+        choice = resp.choices[0]
+        if choice.finish_reason == "length":
+            return ""
+        return (choice.message.content or "").strip()
