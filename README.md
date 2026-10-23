@@ -22,6 +22,28 @@ ollama pull qwen2.5:7b-instruct
 No account or API key is needed. To use another OpenAI-compatible provider, set `LLM_BASE_URL`,
 `LLM_MODEL` and `LLM_API_KEY` in a `.env` file.
 
+### Voice (optional)
+
+Press the mic in the chat bar (hold to talk, release to send); a short tap keeps recording until you press
+Submit. The question is transcribed, answered as usual, and the bottom line is read back aloud (toggle in
+the sidebar). Voice appears automatically when a key is available: `VOICE_API_KEY`, or `LLM_API_KEY` when
+`LLM_BASE_URL` is OpenAI or Groq, or `OPENAI_API_KEY`.
+
+| Provider | Speech to text | Text to speech |
+|---|---|---|
+| OpenAI (default) | `gpt-4o-mini-transcribe` | `gpt-4o-mini-tts` |
+| Groq | `whisper-large-v3-turbo` | `canopylabs/orpheus-v1-english` |
+
+Groq's Orpheus voice needs its terms accepted once by an org admin in the
+[Groq playground](https://console.groq.com/playground?model=canopylabs%2Forpheus-v1-english).
+Override with `VOICE_BASE_URL`, `VOICE_STT_MODEL`, `VOICE_TTS_MODEL`, `VOICE_TTS_VOICE`.
+
+**Mobile:** browsers allow the microphone only on HTTPS or `localhost`. Hosted deployments (Streamlit Cloud)
+are HTTPS and work; opening `http://<your-pc-ip>:8501` on a phone does not, and the mic button is hidden
+by the browser. On narrow screens the ticket's side panel is hidden and a "Voice on" note appears instead.
+
+The UI follows the Streamlit light/dark setting (Settings menu) with a boarding-pass header and IBM Plex fonts.
+
 If HTTPS requests fail behind a corporate proxy, the code already uses the Windows certificate store
 (`truststore`); no extra configuration is needed.
 

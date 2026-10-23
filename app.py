@@ -55,7 +55,8 @@ html, body, .stApp, [data-testid="stSidebar"], [data-testid="stChatInput"] texta
 .pass-stub div { font: 500 .78rem/1.25 'IBM Plex Mono', ui-monospace, monospace; color: var(--p-fg); }
 .pass-stub small { display: block; font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: var(--p-dim); margin-bottom: .2rem; }
 .pass-stub .ok { color: var(--p-fg); font-weight: 700; }
-@media (max-width: 760px) { .pass-stub { display: none; } .pass::before, .pass::after { display: none; } .pass h1 { font-size: 1.9rem; } }
+.voice-chip { display: none; margin: .6rem 0 0; font: 500 .72rem 'IBM Plex Mono', monospace; color: var(--p-mute); }
+@media (max-width: 760px) { .voice-chip { display: block; } .pass-stub { display: none; } .pass::before, .pass::after { display: none; } .pass h1 { font-size: 1.9rem; } }
 [data-testid="stSidebar"] { background: var(--p-side); border-right: 1px solid var(--p-border); }
 [data-testid="stSidebar"] .block-container, [data-testid="stSidebarUserContent"] { padding-top: 1.2rem; }
 .sb-brand { display: flex; align-items: center; gap: .65rem; margin: 0 0 .4rem; }
@@ -254,6 +255,8 @@ with st.sidebar:
                 f'Model: <b>{_llm().model}</b></div>', unsafe_allow_html=True)
 
 _voice_field = '<div><small>Input</small>Text <span class="ok">+ Voice</span></div>' if voice else '<div><small>Input</small>Text</div>'
+_voice_chip = ('<div class="voice-chip" id="voice-chip"><i class="fa-solid fa-microphone"></i> Voice on: use the mic '
+               'in the message bar</div>' if voice else '')
 st.markdown(f"""
 <div class="pass">
   <div class="pass-main">
@@ -269,6 +272,7 @@ st.markdown(f"""
     {_voice_field}
   </div>
 </div>
+{_voice_chip}
 """, unsafe_allow_html=True)
 autoplay_last = st.session_state.pop("autoplay_last", False)
 for i, m in enumerate(st.session_state.messages):

@@ -5,6 +5,13 @@
   window.__holdToTalk = true;
   const MIC = '[data-testid="stChatInputMicButton"]';
   const APPROVE = '[data-testid="stChatInputApproveButton"]';
+  // Browsers expose the microphone only on HTTPS or localhost; over plain http (e.g. a phone on the LAN)
+  // Streamlit hides the mic button, so say why instead of leaving the user hunting for it.
+  const chip = document.getElementById("voice-chip");
+  if (chip && !window.isSecureContext) {
+    chip.style.display = "block";
+    chip.textContent = "Mic unavailable: open this app over HTTPS (or localhost) to use voice.";
+  }
   let heldSince = 0, suppressClick = false;
 
   document.addEventListener("pointerdown", (e) => {
