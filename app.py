@@ -23,36 +23,67 @@ st.set_page_config(page_title="Airport Investment Agent", page_icon=":material/f
 
 st.markdown("""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
-:root { --accent: #2563eb; --card-border: rgba(100,116,139,.28); }
-@media (prefers-color-scheme: dark) { :root { --accent: #60a5fa; --card-border: rgba(148,163,184,.25); } }
+:root { --p-page: #f5f5f3; --p-bg: #fdfdfb; --p-fg: #17181c; --p-mute: #4a4b52; --p-dim: #74757c;
+  --p-line: rgba(23,24,28,.35); --p-stub: #f1f1ee; --p-shadow: rgba(23,24,28,.3); --p-border: rgba(23,24,28,.18); --p-side: #ebebe8; }
+:root[data-p-theme="dark"] { --p-page: #1e1f24; --p-bg: #2b2c33; --p-fg: #ecece8; --p-mute: #bdbdc4; --p-dim: #8e8f98;
+  --p-line: rgba(236,236,232,.3); --p-stub: rgba(236,236,232,.05); --p-shadow: rgba(14,14,18,.55); --p-border: rgba(236,236,232,.14); --p-side: #25262b; }
+html, body, .stApp, [data-testid="stSidebar"], [data-testid="stChatInput"] textarea, button, input {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+[data-testid="stIconMaterial"], .material-symbols-rounded { font-family: 'Material Symbols Rounded' !important; }
 .block-container { max-width: 1100px; padding-top: 4rem; }
-.hero { position: relative; display: flex; align-items: center; gap: 1.1rem; margin: 0 0 1.5rem; padding: 1.4rem 1.5rem;
-  text-align: left; border: 1px solid var(--card-border); border-radius: 1rem; overflow: hidden;
-  background: linear-gradient(120deg, rgba(37,99,235,.14), rgba(14,165,233,.06) 55%, transparent); }
-@media (prefers-color-scheme: dark) { .hero { background: linear-gradient(120deg, rgba(96,165,250,.18), rgba(56,189,248,.07) 55%, transparent); } }
-.hero::after { content: ""; position: absolute; right: -2.5rem; top: -2.5rem; width: 11rem; height: 11rem; border-radius: 50%;
-  background: radial-gradient(circle, rgba(96,165,250,.28), transparent 70%); pointer-events: none; }
-.hero-badge { flex: none; display: grid; place-items: center; width: 3.4rem; height: 3.4rem; border-radius: .9rem;
-  color: #fff; font-size: 1.5rem; background: linear-gradient(135deg, #2563eb, #0ea5e9); box-shadow: 0 6px 18px rgba(37,99,235,.35); }
-.hero-badge i { transform: rotate(-20deg); }
-.hero h1 { margin: 0; padding: 0; font-size: 2.1rem; font-weight: 750; letter-spacing: -.025em; line-height: 1.15;
-  background: linear-gradient(90deg, var(--accent), #0ea5e9); -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; }
-.hero p { margin: .3rem 0 .7rem; font-size: 1rem; opacity: .75; }
-.hero-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
-.hero-chips span { font-size: .75rem; font-weight: 500; padding: .2rem .65rem; border-radius: 999px;
-  border: 1px solid var(--card-border); background: rgba(100,116,139,.08); }
-.hero-chips i { color: var(--accent); margin-right: .35rem; }
-[data-testid="stSidebar"] i.fa-plane { color: var(--accent); margin-right: .5rem; }
+.pass { position: relative; display: flex; margin: 0 0 1.75rem; text-align: left; color: var(--p-fg); border-radius: 1.1rem;
+  background: var(--p-bg);
+  box-shadow: 0 18px 40px -22px var(--p-shadow); border: 1.5px solid var(--p-fg); overflow: hidden; }
+.pass::before, .pass::after { content: ""; position: absolute; right: 13.2rem; width: 1.4rem; height: 1.4rem; border-radius: 50%;
+  background: var(--p-page); z-index: 2; }
+.pass::before { top: -.7rem; } .pass::after { bottom: -.7rem; }
+.pass-main { flex: 1; padding: 1.6rem 1.8rem 1.2rem; position: relative; }
+.pass-eyebrow { font: 600 .68rem/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--p-dim); display: flex; align-items: center; gap: .6rem; }
+.pass h1 { margin: .85rem 0 .35rem; padding: 0; font: 500 2.4rem/1.1 'IBM Plex Sans', system-ui, sans-serif;
+  letter-spacing: -.025em; color: var(--p-fg); }
+.pass h1 em { font-style: normal; color: var(--p-fg); }
+.pass p { margin: 0 0 1.1rem; max-width: 34rem; font-size: 1rem; line-height: 1.5; color: var(--p-mute); }
+.pass-route { display: flex; align-items: center; gap: .7rem; font: 500 .78rem 'IBM Plex Mono', ui-monospace, monospace; color: var(--p-fg); }
+.pass-route b { font-weight: 500; font-size: 1.1rem; letter-spacing: .08em; color: var(--p-fg); }
+.pass-route .line { flex: 1; max-width: 11rem; height: 0; border-top: 2px dashed var(--p-line); position: relative; }
+.pass-route .line i { position: absolute; right: -.2rem; top: -.62rem; color: var(--p-fg); font-size: .9rem; }
+.pass-stub { width: 13.5rem; padding: 1.6rem 1.3rem; border-left: 2px dashed var(--p-line); display: flex;
+  flex-direction: column; justify-content: center; gap: .85rem; background: var(--p-stub); }
+.pass-stub div { font: 500 .78rem/1.25 'IBM Plex Mono', ui-monospace, monospace; color: var(--p-fg); }
+.pass-stub small { display: block; font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: var(--p-dim); margin-bottom: .2rem; }
+.pass-stub .ok { color: var(--p-fg); font-weight: 700; }
+@media (max-width: 760px) { .pass-stub { display: none; } .pass::before, .pass::after { display: none; } .pass h1 { font-size: 1.9rem; } }
+[data-testid="stSidebar"] { background: var(--p-side); border-right: 1px solid var(--p-border); }
+[data-testid="stSidebar"] .block-container, [data-testid="stSidebarUserContent"] { padding-top: 1.2rem; }
+.sb-brand { display: flex; align-items: center; gap: .65rem; margin: 0 0 .4rem; }
+.sb-name { font: 700 1.05rem/1.1 'IBM Plex Sans', system-ui, sans-serif; letter-spacing: -.01em; }
+.sb-label { font: 600 .62rem/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--p-dim); margin: 1.4rem 0 .6rem; }
+.sb-note { font-size: .78rem; line-height: 1.5; color: var(--p-mute); }
+.sb-note b { color: var(--p-fg); font-weight: 600; }
+[data-testid="stSidebar"] [data-testid="stButton"] button { background: transparent; border: 1px solid var(--p-border);
+  border-radius: .6rem; padding: .5rem .7rem; min-height: 0; justify-content: flex-start; text-align: left;
+  transition: border-color .12s, background .12s; }
+[data-testid="stSidebar"] [data-testid="stButton"] button p { font-size: .82rem; line-height: 1.4; }
+[data-testid="stSidebar"] [data-testid="stButton"] button[kind="secondary"]:hover { border-color: var(--p-fg); background: var(--p-bg); }
+[data-testid="stSidebar"] [data-testid="stButton"] button[kind="tertiary"] { border-color: transparent; padding-left: 0; color: var(--p-mute); }
+[data-testid="stSidebar"] [data-testid="stButton"] button[kind="tertiary"]:hover { color: var(--p-fg); background: transparent; }
+[data-testid="stSidebar"] [data-testid="stCheckbox"] label > div:nth-child(2) { background: transparent !important;
+  border: 1.5px solid var(--p-fg) !important; }
+[data-testid="stSidebar"] [data-testid="stCheckbox"] label > div:nth-child(2) > div { background: var(--p-fg) !important; }
+[data-testid="stSidebar"] [data-testid="stCheckbox"] label[data-selected="true"] > div:nth-child(2) { background: var(--p-fg) !important; }
+[data-testid="stSidebar"] [data-testid="stCheckbox"] label[data-selected="true"] > div:nth-child(2) > div { background: var(--p-bg) !important; }
 [data-testid="stMarkdownContainer"], [data-testid="stMetric"], [data-testid="stCaptionContainer"],
 [data-testid="stSidebar"] button, [data-testid="stSidebar"] p { text-align: left !important; }
 [data-testid="stSidebar"] button { justify-content: flex-start; }
 [data-testid="stSidebar"] button p { text-align: left; }
 [data-testid="stMetric"] { align-items: flex-start; }
 [data-testid="stMetricValue"] { font-weight: 700; }
-[data-testid="stVerticalBlockBorderWrapper"] { border-color: var(--card-border); }
-[data-testid="stChatMessage"] { background: transparent; border: 1px solid var(--card-border);
+[data-testid="stVerticalBlockBorderWrapper"] { border-color: var(--p-border); }
+[data-testid="stChatMessage"] { background: transparent; border: 1px solid var(--p-border);
   border-radius: .75rem; padding: 1rem 1.1rem; }
 </style>
 """, unsafe_allow_html=True)
@@ -205,37 +236,37 @@ def _render(msg: dict, autoplay: bool = False):
 agent = _agent()
 
 with st.sidebar:
-    st.markdown('<h3 style="text-align:left"><i class="fa-solid fa-plane"></i>Airport Agent</h3>', unsafe_allow_html=True)
-    st.caption(f"Model: `{_llm().model}`")
-    st.markdown("**Try:**")
+    st.markdown('<div class="sb-brand"><div class="sb-name">Airport Agent</div></div>', unsafe_allow_html=True)
+    if st.button("Reset conversation", type="tertiary", icon=":material/restart_alt:"):
+        st.session_state.pop("agent", None)
+        st.rerun()
+    st.markdown('<div class="sb-label">Try asking</div>', unsafe_allow_html=True)
     for ex in EXAMPLES:
         if st.button(ex, width="stretch"):
             st.session_state.pending = ex
-    if st.button("Reset conversation"):
-        st.session_state.pop("agent", None)
-        st.rerun()
     voice = _voice()
     speak_back = False
     if voice:
-        st.divider()
+        st.markdown('<div class="sb-label">Voice</div>', unsafe_allow_html=True)
         speak_back = st.toggle("Speak replies to voice questions", value=True)
-    st.divider()
-    st.caption("Numbers come from public BTS data and deterministic scoring code. The LLM only interprets "
-               "your question and explains the results. Scores are 0-100 relative to US peers.")
+    st.markdown(f'<div class="sb-label">About</div><div class="sb-note">Numbers come from public BTS data and '
+                f'deterministic scoring code; the LLM only interprets your question and explains the results.<br>'
+                f'Model: <b>{_llm().model}</b></div>', unsafe_allow_html=True)
 
-_voice_chip = '<span><i class="fa-solid fa-microphone"></i>Voice enabled</span>' if voice else ""
+_voice_field = '<div><small>Input</small>Text <span class="ok">+ Voice</span></div>' if voice else '<div><small>Input</small>Text</div>'
 st.markdown(f"""
-<div class="hero">
-  <div class="hero-badge"><i class="fa-solid fa-plane"></i></div>
-  <div>
-    <h1>Airport Investment Agent</h1>
-    <p>Where should the next terminal dollar go? Ask in plain language, by text or voice.</p>
-    <div class="hero-chips">
-      <span><i class="fa-solid fa-database"></i>Public BTS data</span>
-      <span><i class="fa-solid fa-calculator"></i>Deterministic scoring</span>
-      <span><i class="fa-solid fa-shield-halved"></i>Numbers checked before narration</span>
-      {_voice_chip}
-    </div>
+<div class="pass">
+  <div class="pass-main">
+    <div class="pass-eyebrow">Investment briefing &middot; Boarding pass</div>
+    <h1>Airport Investment <em>Agent</em></h1>
+    <p>Where should the next terminal dollar go? Ask in plain language and get a ranked, evidence-backed answer.</p>
+    <div class="pass-route"><b>QUESTION</b><span class="line"><i class="fa-solid fa-plane"></i></span><b>DECISION</b></div>
+  </div>
+  <div class="pass-stub">
+    <div><small>Data</small>BTS on-time + T-100</div>
+    <div><small>Scoring</small>Deterministic code</div>
+    <div><small>Numbers</small><span class="ok">Verified</span> before narration</div>
+    {_voice_field}
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -246,11 +277,17 @@ for i, m in enumerate(st.session_state.messages):
 typed = st.chat_input("Ask about US airports…" + (" (or press the mic to talk)" if voice else ""),
                       accept_audio=bool(voice))
 spoken = None
-if voice:
-    # The iframe only hosts a loader: the script is injected into the parent page so it can see the chat input.
-    js = (Path(__file__).parent / "airport_agent" / "hold_to_talk.js").read_text(encoding="utf-8")
+
+
+def _inject(*names: str):
+    """Load scripts into the parent page (the component iframe only hosts this loader)."""
+    code = "\n".join((Path(__file__).parent / "airport_agent" / n).read_text(encoding="utf-8") for n in names)
     components.html("<script>const d = window.parent.document, s = d.createElement('script');"
-                    f"s.textContent = {json.dumps(js)}; d.head.appendChild(s);</script>", height=0)
+                    f"s.textContent = {json.dumps(code)}; d.head.appendChild(s);</script>", height=0)
+
+
+_inject("theme_sync.js", *(["hold_to_talk.js"] if voice else []))
+if voice:
     if typed and typed.audio:
         with st.spinner("Transcribing…"):
             try:
