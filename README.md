@@ -13,14 +13,18 @@ python -m venv .venv
 .venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Install [Ollama](https://ollama.com) and pull the default model (about 4.7 GB):
+The chat model runs on [Groq](https://console.groq.com/keys) through its OpenAI-compatible API, so you need a
+free Groq API key. Create a `.env` file in the project root:
 
-```powershell
-ollama pull qwen2.5:7b-instruct
+```
+LLM_BASE_URL=https://api.groq.com/openai/v1
+LLM_MODEL=llama-3.3-70b-versatile
+LLM_API_KEY=gsk_your_key_here
 ```
 
-No account or API key is needed. To use another OpenAI-compatible provider, set `LLM_BASE_URL`,
-`LLM_MODEL` and `LLM_API_KEY` in a `.env` file.
+Any other OpenAI-compatible provider works the same way by changing these three values. The same Groq key
+also enables voice (see below). When deployed on Streamlit Cloud, put the same values in the app's secrets
+(see `.streamlit/secrets.toml.example`) instead of a `.env` file.
 
 ### Voice (optional)
 
@@ -47,16 +51,26 @@ The UI follows the Streamlit light/dark setting (Settings menu) with a boarding-
 If HTTPS requests fail behind a corporate proxy, the code already uses the Windows certificate store
 (`truststore`); no extra configuration is needed.
 
-## Run
+## Run locally
+
+1. Complete the setup above (virtual environment, dependencies, `.env` with your Groq key).
+2. Start the chat UI:
 
 ```powershell
-.venv\Scripts\python.exe -m streamlit run app.py     # chat UI
-.venv\Scripts\python.exe -m airport_agent.cli        # terminal chat
+.venv\Scripts\python.exe -m streamlit run app.py     # chat UI at http://localhost:8501
+.venv\Scripts\python.exe -m airport_agent.cli        # or: terminal chat
 ```
 
-On first use the app downloads 12 months of BTS on-time data (about 350 MB, aggregated to a few MB and
-cached in `.cache/`) and per-airport T-100 data on demand. The first question can take several minutes;
-later ones are faster. On a 15 GB CPU-only laptop the 7B model took 26-42 s per answer once the data was cached.
+By default the app runs in live mode: on first use it downloads 12 months of BTS on-time data (about 350 MB,
+aggregated to a few MB and cached in `.cache/`) and per-airport T-100 data on demand. The first question can
+take several minutes; later ones are faster.
+
+To skip the downloads and use the committed data snapshot in `data/` (what the hosted app does), set
+`DATA_MODE=snapshot` before starting:
+
+```powershell
+$env:DATA_MODE="snapshot"; .venv\Scripts\python.exe -m streamlit run app.py
+```
 
 ## Example questions
 - Which airports in New England are strong candidates for terminal expansion?
@@ -72,7 +86,7 @@ $env:PYTHONPATH="."; .venv\Scripts\python.exe -m pytest tests -q
 ```
 
 Unit tests need no network except `test_airports.py`, which downloads the small OurAirports files once.
-Live checks that hit the real data sources and the real model:
+Live checks that hit the real data sources and the configured LLM:
 `tests/smoke_data_layer.py`, `smoke_analytics.py`, `smoke_executor.py`, `smoke_llm.py`
 (run each with `$env:PYTHONPATH="."`).
 
